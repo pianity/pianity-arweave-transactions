@@ -6,13 +6,15 @@
     "license": "MIT",
     "author": "Lancelot Owczarczak <lancelot@pianity.com>, Kevin Primicerio <kevin@pianity.com>",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "install": "yarn build"
     },
     "dependencies": {
-        "module-alias": "^2.2.2",
-        "arweave": "^1.10.11"
+        "arweave": "^1.10.11",
+        "module-alias": "^2.2.2"
     },
     "devDependencies": {
+        "@types/node": "^14.14.35",
         "eslint": "^7.21.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-airbnb-base": "^14.2.1",
