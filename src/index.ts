@@ -2,6 +2,8 @@ import Arweave from "arweave";
 import Transaction from "arweave/node/lib/transaction";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
+const PST = "PTY"
+
 interface IInput {
     function: string;
 }
@@ -10,6 +12,18 @@ type Options = {
     signer?: TransactionSigner;
 };
 type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
+
+export function payWithEuros(contractOwnerAddr: string, target: string, tokenId: string, price: number) {
+    return {
+        'function': 'transferBatch',
+        'froms': [contractOwnerAddr,""],
+        'tokenIds': [PST, tokenId],
+        'targets': [target, target],
+        'qtys': [price,undefined],
+        'nos': [undefined,1],
+        'prices': [undefined,price]
+    };
+}
 
 export async function interactWrite(
     arweave: Arweave,
