@@ -6,23 +6,33 @@ interface IInput {
     function: string;
 }
 
+type Options = {
+    signer?: TransactionSigner;
+};
+type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
+
 export async function interactWrite(
     arweave: Arweave,
     wallet: JWKInterface,
     contractId: string,
     input: IInput,
+    options?: Options,
 ): Promise<Transaction> {
-    const interactTx = await arweave.createTransaction(
-        { data: `Pianity ${input.function} ${new Date().toISOString()}` },
-        wallet,
-    );
+    let interactTx = await arweave.createTransaction({ data: "" }, wallet);
 
+    interactTx.addTag("Exchange", "Pianity");
+    interactTx.addTag("Type", input.function);
     interactTx.addTag("App-Name", "SmartWeaveAction");
     interactTx.addTag("App-Version", "0.3.0");
+    interactTx.addTag("Unix-Time", `${Date.now()}`);
     interactTx.addTag("Contract", contractId);
     interactTx.addTag("Input", JSON.stringify(input));
 
-    await arweave.transactions.sign(interactTx, wallet);
+    if (options?.signer) {
+        interactTx = await options.signer(interactTx);
+    } else {
+        await arweave.transactions.sign(interactTx, wallet);
+    }
 
     const response = await arweave.transactions.post(interactTx);
 
