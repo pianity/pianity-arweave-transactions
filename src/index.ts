@@ -2,37 +2,38 @@ import Arweave from "arweave";
 import Transaction from "arweave/node/lib/transaction";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-const PST = "PTY"
+const PST = "PTY";
 
 interface IInput {
     function: string;
 }
 
-type Options = {
-    signer?: TransactionSigner;
-};
 type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
 
-export function payWithEuros(contractOwnerAddr: string, target: string, tokenId: string, price: number) {
+export function payWithEuros(
+    contractOwnerAddr: string,
+    target: string,
+    tokenId: string,
+    price: number,
+) {
     return {
-        'function': 'transferBatch',
-        'froms': [contractOwnerAddr,""],
-        'tokenIds': [PST, tokenId],
-        'targets': [target, target],
-        'qtys': [price,undefined],
-        'nos': [undefined,1],
-        'prices': [undefined,price]
+        function: "transferBatch",
+        froms: [contractOwnerAddr, ""],
+        tokenIds: [PST, tokenId],
+        targets: [target, target],
+        qtys: [price, undefined],
+        nos: [undefined, 1],
+        prices: [undefined, price],
     };
 }
 
 export async function interactWrite(
     arweave: Arweave,
-    wallet: JWKInterface,
+    signer: TransactionSigner,
     contractId: string,
     input: IInput,
-    options?: Options,
 ): Promise<Transaction> {
-    let interactTx = await arweave.createTransaction({ data: "" }, wallet);
+    let interactTx = await arweave.createTransaction({ data: "" });
 
     interactTx.addTag("Exchange", "Pianity");
     interactTx.addTag("Type", input.function);
@@ -42,11 +43,7 @@ export async function interactWrite(
     interactTx.addTag("Contract", contractId);
     interactTx.addTag("Input", JSON.stringify(input));
 
-    if (options?.signer) {
-        interactTx = await options.signer(interactTx);
-    } else {
-        await arweave.transactions.sign(interactTx, wallet);
-    }
+    interactTx = await signer(interactTx);
 
     const response = await arweave.transactions.post(interactTx);
 
@@ -55,4 +52,9 @@ export async function interactWrite(
     }
 
     return interactTx;
+}
+
+export function createJWKSigner(arweave: Arweave, wallet: JWKInterface): TransactionSigner {
+    return (transaction: Transaction) =>
+        arweave.transactions.sign(transaction, wallet).then(() => transaction);
 }
