@@ -1,11 +1,28 @@
 import Arweave from "arweave";
 import Transaction from "arweave/node/lib/transaction";
 import { JWKInterface } from "arweave/node/lib/wallet";
+import {
+    execute,
+    ContractInteraction,
+    ContractInteractionResult,
+} from "smartweave/lib/contract-step";
+import { unpackTags } from "smartweave/lib/utils";
+import { loadContract } from "smartweave/lib/contract-load";
+import { readContract } from "smartweave/lib/contract-read";
+import { InteractionTx } from "smartweave/lib/interaction-tx";
 
 const PST = "PTY";
 
 interface IInput {
     function: string;
+}
+
+interface ICreateTransactionOptions {
+    input?: IInput;
+    winstonQty?: string;
+    publicKey?: JWKInterface;
+    target?: string;
+    contractId?: string;
 }
 
 type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
@@ -25,6 +42,72 @@ export function payWithEuros(
         nos: [undefined, 1],
         prices: [undefined, price],
     };
+}
+
+export async function createTransaction(
+    arweave: Arweave,
+    { input, winstonQty = "0", publicKey, target = "", contractId }: ICreateTransactionOptions,
+): Promise<Transaction> {
+    let interactTx = await arweave.createTransaction(
+        { data: "", quantity: winstonQty, target },
+        publicKey,
+    );
+
+    interactTx.addTag("Exchange", "Pianity");
+    if (input && contractId) {
+        interactTx.addTag("Type", input.function);
+        interactTx.addTag("App-Name", "SmartWeaveAction");
+        interactTx.addTag("App-Version", "0.3.0");
+        interactTx.addTag("Contract", contractId);
+        interactTx.addTag("Input", JSON.stringify(input));
+    }
+    interactTx.addTag("Unix-Time", `${Date.now()}`);
+
+    return interactTx;
+}
+
+export async function interactWriteDryRun(
+    arweave: Arweave,
+    tx: Transaction,
+    contractId: string,
+    input: IInput,
+    fromAddress: string,
+): Promise<ContractInteractionResult> {
+    const contractInfo = await loadContract(arweave, contractId);
+    const latestState = await readContract(arweave, contractId);
+
+    const interaction: ContractInteraction = {
+        input,
+        caller: fromAddress,
+    };
+
+    const { height, current } = await arweave.network.getInfo();
+
+    const ts = unpackTags(tx);
+
+    const dummyActiveTx: InteractionTx = {
+        id: tx.id,
+        owner: {
+            address: fromAddress,
+        },
+        recipient: tx.target,
+        tags: ts,
+        fee: {
+            winston: tx.reward,
+        },
+        quantity: {
+            winston: tx.quantity,
+        },
+        block: {
+            height,
+            id: current,
+            timestamp: Date.now(),
+        },
+    };
+
+    contractInfo.swGlobal._activeTx = dummyActiveTx;
+
+    return execute(contractInfo.handler, interaction, latestState);
 }
 
 export async function interactWrite(
