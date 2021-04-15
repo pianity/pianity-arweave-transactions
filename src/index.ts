@@ -49,7 +49,7 @@ export async function createTransaction(
     { input, winstonQty = "0", publicKey, target = "", contractId }: ICreateTransactionOptions,
 ): Promise<Transaction> {
     let interactTx = await arweave.createTransaction(
-        { data: "", quantity: winstonQty, target },
+        { data: Math.random().toString().slice(4), quantity: winstonQty, target },
         publicKey,
     );
 
