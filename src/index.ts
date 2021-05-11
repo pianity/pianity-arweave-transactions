@@ -23,6 +23,7 @@ interface ICreateTransactionOptions {
     publicKey?: JWKInterface;
     target?: string;
     contractId?: string;
+    tags?: { name: string; value: string }[];
 }
 
 type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
@@ -46,7 +47,14 @@ export function payWithEuros(
 
 export async function createTransaction(
     arweave: Arweave,
-    { input, winstonQty = "0", publicKey, target = "", contractId }: ICreateTransactionOptions,
+    {
+        input,
+        winstonQty = "0",
+        publicKey,
+        target = "",
+        contractId,
+        tags,
+    }: ICreateTransactionOptions,
 ): Promise<Transaction> {
     let interactTx = await arweave.createTransaction(
         { data: Math.random().toString().slice(4), quantity: winstonQty, target },
@@ -62,6 +70,10 @@ export async function createTransaction(
         interactTx.addTag("Input", JSON.stringify(input));
     }
     interactTx.addTag("Unix-Time", `${Date.now()}`);
+
+    if (tags) {
+        tags.forEach(({ name, value }) => interactTx.addTag(name, value));
+    }
 
     return interactTx;
 }
