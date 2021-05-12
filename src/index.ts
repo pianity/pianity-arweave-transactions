@@ -24,7 +24,7 @@ interface ICreateTransactionOptions {
     target?: string;
     contractId?: string;
     tags?: { name: string; value: string }[];
-    data?: Uint8Array;
+    data?: Buffer;
 }
 
 type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
