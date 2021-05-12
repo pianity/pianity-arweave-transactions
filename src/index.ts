@@ -24,6 +24,7 @@ interface ICreateTransactionOptions {
     target?: string;
     contractId?: string;
     tags?: { name: string; value: string }[];
+    data?: Uint8Array;
 }
 
 type TransactionSigner = (transaction: Transaction) => Promise<Transaction>;
@@ -54,10 +55,11 @@ export async function createTransaction(
         target = "",
         contractId,
         tags,
+        data,
     }: ICreateTransactionOptions,
 ): Promise<Transaction> {
     let interactTx = await arweave.createTransaction(
-        { data: Math.random().toString().slice(4), quantity: winstonQty, target },
+        { data: data || Math.random().toString().slice(4), quantity: winstonQty, target },
         publicKey,
     );
 
