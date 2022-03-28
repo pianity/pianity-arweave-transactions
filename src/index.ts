@@ -2,12 +2,10 @@ import Arweave from "arweave";
 import Transaction from "arweave/node/lib/transaction";
 import { JWKInterface } from "arweave/node/lib/wallet";
 
-interface IInput {
-    function: string;
-}
+import { Input } from "pianity-smartcontracts";
 
 interface ICreateTransactionOptions {
-    input?: IInput;
+    input?: Input;
     winstonQty?: string;
     publicKey?: JWKInterface;
     target?: string;

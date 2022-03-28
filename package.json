@@ -16,7 +16,8 @@
         "arweave": "^1.10.23",
         "module-alias": "^2.2.2",
         "smartweave": "^0.4.46",
-        "typescript": "^4.5.5"
+        "typescript": "^4.5.5",
+        "pianity-smartcontracts": "pianity/pianity-smartcontracts#5f1cf0b"
     },
     "devDependencies": {
         "@types/node": "^16.11.11",
