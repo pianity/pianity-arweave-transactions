@@ -2561,9 +2561,9 @@ pg-connection-string@2.5.0:
   resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.5.0.tgz#538cadd0f7e603fc09a12590f3b8a452c2c0cf34"
   integrity sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==
 
-pianity-smartcontracts@pianity/pianity-smartcontracts#5f1cf0b:
+pianity-smartcontracts@pianity/pianity-smartcontracts#fab67b0:
   version "1.0.0"
-  resolved "https://codeload.github.com/pianity/pianity-smartcontracts/tar.gz/5f1cf0bd487d8cb6a5aadbc0ea7019f6e0acf45f"
+  resolved "https://codeload.github.com/pianity/pianity-smartcontracts/tar.gz/fab67b0f9eaba15fe83108ae525cf4c3daefc8d9"
   dependencies:
     arweave "^1.10.23"
     ava "^4.0.1"
@@ -2573,7 +2573,7 @@ pianity-smartcontracts@pianity/pianity-smartcontracts#5f1cf0b:
     io-ts "^2.2.16"
     patch-package "^6.4.7"
     postinstall-postinstall "^2.1.0"
-    redstone-smartweave "^0.4.22"
+    redstone-smartweave "^0.4.53"
     replace-in-file "^6.3.2"
     smartweave "0.4.46"
     ts-node "^10.4.0"
@@ -2700,10 +2700,10 @@ redstone-isomorphic@1.1.4, redstone-isomorphic@^1.1.0:
     safe-buffer "^5.1.2"
     undici "^4.15.1"
 
-redstone-smartweave@^0.4.22:
-  version "0.4.53"
-  resolved "https://registry.yarnpkg.com/redstone-smartweave/-/redstone-smartweave-0.4.53.tgz#760ce97756deef7e47e209c458b167f67094591b"
-  integrity sha512-2267urw7T1BkKvonu/coA8QwdmugtZTBDeu/1IdqJCliD+zIXWYDj/62J7RHd8qCYtd+BPar6i8Pw3Ff06QRmg==
+redstone-smartweave@^0.4.53:
+  version "0.4.54"
+  resolved "https://registry.yarnpkg.com/redstone-smartweave/-/redstone-smartweave-0.4.54.tgz#ad2907fa92b115b7819dc76cb96b7fa0d67b553d"
+  integrity sha512-CuDv6Wn5LmunRHwF8RRiDLzn2ZXtOWJ3MKos6vogkZUD23F64Xe8HvS+7p6xMPkoI51I/DbPC5CRpWQyEP1QDA==
   dependencies:
     "@assemblyscript/loader" "^0.19.23"
     archiver "^5.3.0"

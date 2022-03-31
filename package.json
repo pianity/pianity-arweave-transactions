@@ -17,7 +17,7 @@
         "module-alias": "^2.2.2",
         "smartweave": "^0.4.46",
         "typescript": "^4.5.5",
-        "pianity-smartcontracts": "pianity/pianity-smartcontracts#5f1cf0b"
+        "pianity-smartcontracts": "pianity/pianity-smartcontracts#fab67b0"
     },
     "devDependencies": {
         "@types/node": "^16.11.11",
